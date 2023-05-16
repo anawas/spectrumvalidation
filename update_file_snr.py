@@ -58,9 +58,10 @@ if __name__ == "__main__":
                 sig_to_noise = get_snr_for_spectrogram(spec)
                 # Don't overwrite existing data
                 if 'snr' not in spec.header:
-                    # spec.header.append(('snr', sig_to_noise, 'signal-to-noise ratio (-1.0 if nan)'))
+                    spec.header.append(('snr', sig_to_noise, 'signal-to-noise ratio (-1.0 if nan)'))
                     client.put_file(remote_file_path, tmp_filename, overwrite=True)
                 os.remove(os.path.join("temp", tmp_filename))
-                # the current folder 
+                
+                # the current folder is in files[0] 
                 db.persist_snr(files[i], files[0][:-1], sig_to_noise)
 
