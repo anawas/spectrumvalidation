@@ -50,6 +50,8 @@ if __name__ == "__main__":
             # exclude jpg files
             if remote_file_path.endswith("jpg"):
                 continue
+            if db.entry_exists(filename=remote_file_path.split("/")[-1]):
+                continue
             print(f"Reading file {remote_file_path}")
             with tempfile.TemporaryDirectory() as tmpdir:
                 tmp_filename = get_tempfile_name()

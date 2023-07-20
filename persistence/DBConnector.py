@@ -1,5 +1,7 @@
 import sqlite3
 import sqlalchemy
+import sys
+sys.path.append(".")
 from persistence.ValidationResult import Base, ValidationResult
 from sqlalchemy.orm import Session
 
@@ -17,4 +19,22 @@ class DBConnector:
             )
             session.add(spec)
             session.commit()
+    
+    def get_snr_for_file(self, filename) -> list:
+        with Session(self.__engine) as session:
+            statement = sqlalchemy.select(ValidationResult).filter_by(filename=filename)
+            return session.execute(statement).all()
 
+    def entry_exists(self, filename) -> bool:
+        result = self.get_snr_for_file(filename)
+        if len(result) == 0:
+            return False
+        return True
+            
+
+if __name__ == "__main__":
+    con = DBConnector()
+    if con.entry_exists("Arecibo-Observatory_20220202_1703_1854.fit.gz"):
+        print("File already processed -> skipped")
+    else:
+        print("Processing file")
